@@ -133,4 +133,20 @@ public class GameSession {
     public boolean hasPlayers(TeamColor team) {
         return !teamMembers.get(team).isEmpty();
     }
+
+    public boolean switchPlayerTeam(UUID uuid, TeamColor newTeam) {
+        TeamColor oldTeam = null;
+        for (Map.Entry<TeamColor, Set<UUID>> entry : teamMembers.entrySet()) {
+            if (entry.getValue().contains(uuid)) {
+                oldTeam = entry.getKey();
+                entry.getValue().remove(uuid);
+                break;
+            }
+        }
+        if (oldTeam == null) {
+            return false;
+        }
+        teamMembers.get(newTeam).add(uuid);
+        return true;
+    }
 }

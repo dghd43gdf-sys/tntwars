@@ -44,7 +44,7 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0) {
-            player.sendMessage(Component.text("Verwendung: /tntwars <add|info|welt|setspawn|setbeacon|wall>", NamedTextColor.YELLOW));
+            player.sendMessage(Component.text("Verwendung: /tntwars <add|info|welt|setspawn|setbeacon|wall|setteam>", NamedTextColor.YELLOW));
             return true;
         }
 
@@ -55,6 +55,7 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             case "setspawn" -> handleSetSpawn(player, Arrays.copyOfRange(args, 1, args.length));
             case "setbeacon" -> handleSetBeacon(player, Arrays.copyOfRange(args, 1, args.length));
             case "wall" -> handleWall(player, Arrays.copyOfRange(args, 1, args.length));
+            case "setteam" -> handleSetTeam(player, Arrays.copyOfRange(args, 1, args.length));
             default -> handleTeleport(player, sub);
         }
         return true;
@@ -198,6 +199,24 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         player.sendMessage(FormatUtil.success("Schutzwand gespeichert."));
     }
 
+    private void handleSetTeam(Player player, String[] args) {
+        if (args.length < 2) {
+            player.sendMessage(FormatUtil.error("Verwendung: /tntwars setteam <spieler> <rot|blau>"));
+            return;
+        }
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null || !target.isOnline()) {
+            player.sendMessage(FormatUtil.error("Spieler " + args[0] + " ist nicht online."));
+            return;
+        }
+        TeamColor team = TeamColor.fromString(args[1]);
+        if (team == null) {
+            player.sendMessage(FormatUtil.error("Unbekanntes Team. Nutze rot oder blau."));
+            return;
+        }
+        gameManager.switchPlayerTeam(player, target, team);
+    }
+
     private void handleInfo(Player player, String[] args) {
         String worldName;
         if (args.length >= 1 && !args[0].isBlank()) {
@@ -301,6 +320,7 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             sub.add("setspawn");
             sub.add("setbeacon");
             sub.add("wall");
+            sub.add("setteam");
             sub.addAll(gameManager.getArenaNames());
             return filter(sub, args[0]);
         }
@@ -328,6 +348,12 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             return filter(names, args[1]);
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("info")) {
+            return filter(Arrays.asList("rot", "blau"), args[2]);
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("setteam")) {
+            return filter(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), args[1]);
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("setteam")) {
             return filter(Arrays.asList("rot", "blau"), args[2]);
         }
         return Collections.emptyList();

@@ -314,6 +314,41 @@ public class GameManager implements Listener {
         return arena.getWalls().stream().anyMatch(cuboid -> cuboid.contains(location));
     }
 
+    public boolean switchPlayerTeam(Player requester, Player target, TeamColor newTeam) {
+        World targetWorld = target.getWorld();
+        GameSession session = sessions.get(targetWorld.getName().toLowerCase());
+        if (session == null) {
+            requester.sendMessage(FormatUtil.error("In dieser Welt läuft kein Spiel."));
+            return false;
+        }
+        if (session.getState() != GameSession.State.RUNNING) {
+            requester.sendMessage(FormatUtil.error("Das Spiel muss laufen um Spieler zu verschieben."));
+            return false;
+        }
+        TeamColor oldTeam = session.getPlayerTeam(target);
+        if (oldTeam == null) {
+            requester.sendMessage(FormatUtil.error(target.getName() + " nimmt nicht am Spiel teil."));
+            return false;
+        }
+        if (oldTeam == newTeam) {
+            requester.sendMessage(FormatUtil.error(target.getName() + " ist bereits in Team " + newTeam.getDisplay() + "."));
+            return false;
+        }
+        if (!session.switchPlayerTeam(target.getUniqueId(), newTeam)) {
+            requester.sendMessage(FormatUtil.error("Fehler beim Verschieben des Spielers."));
+            return false;
+        }
+        Location spawn = session.nextSpawn(newTeam);
+        if (spawn != null) {
+            target.teleport(spawn);
+        }
+        preparePlayer(target);
+        updateScoreboard(session);
+        broadcast(session, Component.text(target.getName() + " wurde zu Team " + newTeam.getDisplay() + " verschoben.", NamedTextColor.YELLOW));
+        target.sendMessage(FormatUtil.highlight("Du spielst jetzt für Team " + newTeam.getDisplay() + "!"));
+        return true;
+    }
+
     public void handleBlockBreak(BlockBreakEvent event) {
         Location location = event.getBlock().getLocation();
         if (isProtectedWall(location)) {

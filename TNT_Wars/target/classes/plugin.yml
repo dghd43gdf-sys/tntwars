@@ -1,0 +1,22 @@
+name: TNTWars
+main: com.example.tntwars.TNTWarsPlugin
+version: 1.0.0
+author: OpenAI
+api-version: '1.21'
+commands:
+  tntwars:
+    description: TNT Wars Verwaltungsbefehl
+    usage: /<command>
+    aliases: [tntw]
+    permission: tntwars.admin
+  start:
+    description: Startet eine TNT Wars Runde
+    usage: /start
+    permission: tntwars.start
+permissions:
+  tntwars.admin:
+    description: Erlaubt Verwaltung von TNT Wars Arenen
+    default: op
+  tntwars.start:
+    description: Erlaubt das Starten von TNT Wars Runden
+    default: op

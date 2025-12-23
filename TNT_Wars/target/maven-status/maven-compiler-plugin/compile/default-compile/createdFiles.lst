@@ -1,0 +1,13 @@
+com\example\tntwars\model\MapArena.class
+com\example\tntwars\game\GameManager.class
+com\example\tntwars\model\Cuboid.class
+com\example\tntwars\model\StoredLocation.class
+com\example\tntwars\game\ScoreboardService.class
+com\example\tntwars\model\TeamColor.class
+com\example\tntwars\game\GameSession$State.class
+com\example\tntwars\command\StartCommand.class
+com\example\tntwars\TNTWarsPlugin.class
+com\example\tntwars\util\FormatUtil.class
+com\example\tntwars\game\GameSession.class
+com\example\tntwars\command\TNTWarsCommand.class
+com\example\tntwars\storage\MapStorage.class

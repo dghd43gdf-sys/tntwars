@@ -8,6 +8,7 @@ import com.example.tntwars.model.StoredLocation;
 import com.example.tntwars.util.FormatUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;

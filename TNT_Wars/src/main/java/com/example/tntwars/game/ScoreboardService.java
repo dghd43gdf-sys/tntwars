@@ -31,10 +31,10 @@ public class ScoreboardService {
         }
         Objective objective = scoreboard.getObjective(OBJECTIVE_ID);
         if (objective == null) {
-            objective = scoreboard.registerNewObjective(OBJECTIVE_ID, "dummy", FormatUtil.tntTitleLegacy("TNT Wars"));
+            objective = scoreboard.registerNewObjective(OBJECTIVE_ID, "dummy", FormatUtil.tntTitleLegacy("TNT WARS"));
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         } else {
-            objective.setDisplayName(FormatUtil.tntTitleLegacy("TNT Wars"));
+            objective.setDisplayName(FormatUtil.tntTitleLegacy("TNT WARS"));
         }
 
         clearEntries(scoreboard);
@@ -74,7 +74,7 @@ public class ScoreboardService {
         String key = session.getArena().getWorldName().toLowerCase();
         return scoreboards.computeIfAbsent(key, ignored -> {
             Scoreboard scoreboard = manager.getNewScoreboard();
-            Objective objective = scoreboard.registerNewObjective(OBJECTIVE_ID, "dummy", FormatUtil.tntTitleLegacy("TNT Wars"));
+            Objective objective = scoreboard.registerNewObjective(OBJECTIVE_ID, "dummy", FormatUtil.tntTitleLegacy("TNT WARS"));
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             return scoreboard;
         });

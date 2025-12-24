@@ -25,16 +25,58 @@ public final class FormatUtil {
         return Component.text(message, NamedTextColor.YELLOW);
     }
 
+    public static Component infoBold(String message) {
+        return Component.text(message, NamedTextColor.YELLOW).decorate(TextDecoration.BOLD);
+    }
+
     public static Component success(String message) {
         return Component.text(message, NamedTextColor.GREEN);
+    }
+
+    public static Component successBold(String message) {
+        return Component.text(message, NamedTextColor.GREEN).decorate(TextDecoration.BOLD);
     }
 
     public static Component error(String message) {
         return Component.text(message, NamedTextColor.RED);
     }
 
+    public static Component errorBold(String message) {
+        return Component.text(message, NamedTextColor.RED).decorate(TextDecoration.BOLD);
+    }
+
     public static Component highlight(String message) {
         return Component.text(message, NamedTextColor.GOLD);
+    }
+
+    public static Component highlightBold(String message) {
+        return Component.text(message, NamedTextColor.GOLD).decorate(TextDecoration.BOLD);
+    }
+
+    public static Component gray(String message) {
+        return Component.text(message, NamedTextColor.GRAY);
+    }
+
+    public static Component teamAssignment(TeamColor team) {
+        return Component.text("Du bist in Team ")
+                .color(NamedTextColor.YELLOW)
+                .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                .append(Component.text("!", NamedTextColor.YELLOW));
+    }
+
+    public static Component teamSwitch(TeamColor team) {
+        return Component.text("Du spielst jetzt für Team ")
+                .color(NamedTextColor.YELLOW)
+                .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                .append(Component.text("!", NamedTextColor.YELLOW));
+    }
+
+    public static Component playerTeamSwitch(String playerName, TeamColor team) {
+        return Component.text(playerName, NamedTextColor.WHITE)
+                .decorate(TextDecoration.BOLD)
+                .append(Component.text(" wurde zu Team ", NamedTextColor.YELLOW))
+                .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                .append(Component.text(" verschoben.", NamedTextColor.YELLOW));
     }
 
     public static String coloredTeamName(String base, ChatColor chatColor) {
@@ -83,19 +125,32 @@ public final class FormatUtil {
     }
 
     public static Component deathMessage(String playerName) {
-        return Component.text(playerName + " ist gestorben", NamedTextColor.RED);
+        return Component.text(playerName, NamedTextColor.WHITE)
+                .decorate(TextDecoration.BOLD)
+                .append(Component.text(" ist gestorben", NamedTextColor.RED));
     }
 
     public static Component victoryBroadcast(TeamColor winner) {
-        return Component.text("Team ")
+        return Component.text("Team ", NamedTextColor.GOLD)
+                .decorate(TextDecoration.BOLD)
                 .append(Component.text(winner.getDisplay(), winner.getNamedColor()).decorate(TextDecoration.BOLD))
-                .append(Component.text(" gewinnt ", NamedTextColor.GOLD))
-                .append(tntTitleComponent("TNT Wars"))
-                .append(Component.text("!", winner.getNamedColor()));
+                .append(Component.text(" gewinnt!", NamedTextColor.GOLD).decorate(TextDecoration.BOLD));
     }
 
     public static Component victorySubtitle(TeamColor winner) {
-        return Component.text("Team " + winner.getDisplay() + " hat gewonnen!", winner.getNamedColor())
+        return Component.text("Team ", winner.getNamedColor())
+                .decorate(TextDecoration.BOLD)
+                .append(Component.text(winner.getDisplay(), winner.getNamedColor()).decorate(TextDecoration.BOLD))
+                .append(Component.text(" hat gewonnen!", winner.getNamedColor()).decorate(TextDecoration.BOLD));
+    }
+
+    public static Component gameStart() {
+        return Component.text("TNT Wars startet jetzt!", NamedTextColor.GOLD)
+                .decorate(TextDecoration.BOLD);
+    }
+
+    public static Component worldReset() {
+        return Component.text("Arena wird zurückgesetzt...", NamedTextColor.YELLOW)
                 .decorate(TextDecoration.BOLD);
     }
 }

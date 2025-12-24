@@ -143,7 +143,7 @@ public class GameManager implements Listener {
         clearInventories(players);
         distributePlayers(session, world);
         updateScoreboard(session);
-        broadcast(session, Component.text("TNT Wars startet jetzt! Viel Erfolg!", NamedTextColor.GOLD));
+        broadcast(session, FormatUtil.gameStart());
         return true;
     }
 
@@ -169,8 +169,8 @@ public class GameManager implements Listener {
                 }
                 player.teleport(target);
                 preparePlayer(player);
-                player.playSound(Sound.sound(org.bukkit.Sound.ENTITY_PLAYER_LEVELUP.getKey(), Sound.Source.PLAYER, 1f, 1f), Sound.Emitter.self());
-                player.sendMessage(FormatUtil.highlight("Du spielst für Team " + color.getDisplay() + "!"));
+                player.playSound(Sound.sound(org.bukkit.Sound.ENTITY_PLAYER_LEVELUP.getKey(), Sound.Source.PLAYER, 0.8f, 1f), Sound.Emitter.self());
+                player.sendMessage(FormatUtil.teamAssignment(color));
             }
         }
     }
@@ -230,7 +230,7 @@ public class GameManager implements Listener {
         List<Player> participants = getParticipants(session);
         scoreboardService.clear(session, participants);
         for (Player player : participants) {
-            player.playSound(Sound.sound(org.bukkit.Sound.UI_TOAST_CHALLENGE_COMPLETE.getKey(), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
+            player.playSound(Sound.sound(org.bukkit.Sound.UI_TOAST_CHALLENGE_COMPLETE.getKey(), Sound.Source.MASTER, 0.7f, 1f), Sound.Emitter.self());
             player.showTitle(Title.title(FormatUtil.tntTitleComponent("TNT Wars"), FormatUtil.victorySubtitle(winner)));
         }
         Bukkit.getScheduler().runTaskLater(plugin, () -> resetWorld(session.getArena().getWorldName()), 200L);
@@ -241,7 +241,7 @@ public class GameManager implements Listener {
         if (world == null) {
             return;
         }
-        broadcastToWorld(world, Component.text("Arena wird zurückgesetzt...", NamedTextColor.YELLOW));
+        broadcastToWorld(world, FormatUtil.worldReset());
         for (Player player : new ArrayList<>(world.getPlayers())) {
             player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
         }
@@ -344,8 +344,8 @@ public class GameManager implements Listener {
         }
         preparePlayer(target);
         updateScoreboard(session);
-        broadcast(session, Component.text(target.getName() + " wurde zu Team " + newTeam.getDisplay() + " verschoben.", NamedTextColor.YELLOW));
-        target.sendMessage(FormatUtil.highlight("Du spielst jetzt für Team " + newTeam.getDisplay() + "!"));
+        broadcast(session, FormatUtil.playerTeamSwitch(target.getName(), newTeam));
+        target.sendMessage(FormatUtil.teamSwitch(newTeam));
         return true;
     }
 

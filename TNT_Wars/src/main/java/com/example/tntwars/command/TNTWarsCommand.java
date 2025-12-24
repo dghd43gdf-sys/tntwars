@@ -78,7 +78,9 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             return;
         }
         player.teleport(world.getSpawnLocation());
-        player.sendMessage(FormatUtil.success("Du wurdest in die Welt " + world.getName() + " teleportiert."));
+        player.sendMessage(FormatUtil.success("Du wurdest in die Welt ")
+                .append(Component.text(world.getName(), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                .append(Component.text(" teleportiert.", NamedTextColor.GREEN)));
     }
 
     private void handleAdd(Player player, String[] args) {
@@ -109,7 +111,9 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        player.sendMessage(FormatUtil.success("Arena " + world.getName() + " wurde hinzugefügt. Nutze /tntwars " + world.getName() + " zum Teleportieren."));
+        player.sendMessage(FormatUtil.success("Arena ")
+                .append(Component.text(world.getName(), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                .append(Component.text(" wurde hinzugefügt.", NamedTextColor.GREEN)));
     }
 
     private void handleSetSpawn(Player player, String[] args) {
@@ -139,7 +143,9 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         MapArena arena = gameManager.getOrCreateArena(player.getWorld().getName());
         arena.addSpawn(team, player.getLocation(), index);
         gameManager.saveArena(arena);
-        player.sendMessage(FormatUtil.success("Spawn für Team " + team.getDisplay() + " gespeichert."));
+        player.sendMessage(FormatUtil.success("Spawn für Team ")
+                .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                .append(Component.text(" gespeichert.", NamedTextColor.GREEN)));
     }
 
     private void handleSetBeacon(Player player, String[] args) {
@@ -176,9 +182,15 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         arena.addBeacon(team, beaconLocation, index);
         gameManager.saveArena(arena);
         if (index != null) {
-            player.sendMessage(FormatUtil.success("Beacon " + (index + 1) + " für Team " + team.getDisplay() + " gespeichert."));
+            player.sendMessage(FormatUtil.success("Beacon ")
+                    .append(Component.text((index + 1), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                    .append(Component.text(" für Team ", NamedTextColor.GREEN))
+                    .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                    .append(Component.text(" gespeichert.", NamedTextColor.GREEN)));
         } else {
-            player.sendMessage(FormatUtil.success("Beacon für Team " + team.getDisplay() + " gespeichert."));
+            player.sendMessage(FormatUtil.success("Beacon für Team ")
+                    .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD))
+                    .append(Component.text(" gespeichert.", NamedTextColor.GREEN)));
         }
     }
 
@@ -196,7 +208,7 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         MapArena arena = gameManager.getOrCreateArena(player.getWorld().getName());
         arena.addWall(new Cuboid(player.getWorld().getName(), first.getBlockX(), first.getBlockY(), first.getBlockZ(), second.getBlockX(), second.getBlockY(), second.getBlockZ()));
         gameManager.saveArena(arena);
-        player.sendMessage(FormatUtil.success("Schutzwand gespeichert."));
+        player.sendMessage(FormatUtil.successBold("Schutzwand gespeichert."));
     }
 
     private void handleSetTeam(Player player, String[] args) {
@@ -206,7 +218,9 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null || !target.isOnline()) {
-            player.sendMessage(FormatUtil.error("Spieler " + args[0] + " ist nicht online."));
+            player.sendMessage(FormatUtil.error("Spieler ")
+                    .append(Component.text(args[0], NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                    .append(Component.text(" ist nicht online.", NamedTextColor.RED)));
             return;
         }
         TeamColor team = TeamColor.fromString(args[1]);
@@ -239,7 +253,10 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
             }
         }
 
-        player.sendMessage(Component.text("=== TNT Wars Daten: " + arena.getWorldName() + " ===", NamedTextColor.GOLD));
+        player.sendMessage(Component.text("=== TNT Wars Daten: ", NamedTextColor.GOLD)
+                .decorate(TextDecoration.BOLD)
+                .append(Component.text(arena.getWorldName(), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                .append(Component.text(" ===", NamedTextColor.GOLD).decorate(TextDecoration.BOLD)));
         if (filter != null) {
             sendTeamOverview(player, arena, filter);
         } else {
@@ -248,7 +265,8 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
         }
 
         List<Cuboid> walls = arena.getWalls();
-        player.sendMessage(Component.text("Wände: " + (walls.isEmpty() ? "Keine gespeichert" : ""), NamedTextColor.YELLOW));
+        player.sendMessage(Component.text("Wände: ", NamedTextColor.YELLOW)
+                .append(Component.text(walls.isEmpty() ? "Keine gespeichert" : "", NamedTextColor.GRAY)));
         for (int i = 0; i < walls.size(); i++) {
             Cuboid wall = walls.get(i);
             String text = String.format(Locale.GERMAN, "  %d) %s: (%d,%d,%d) -> (%d,%d,%d)",
@@ -261,10 +279,12 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendTeamOverview(Player player, MapArena arena, TeamColor team) {
-        player.sendMessage(Component.text("Team " + team.getDisplay(), NamedTextColor.AQUA));
+        player.sendMessage(Component.text("Team ", team.getNamedColor())
+                .decorate(TextDecoration.BOLD)
+                .append(Component.text(team.getDisplay(), team.getNamedColor()).decorate(TextDecoration.BOLD)));
         List<StoredLocation> spawns = arena.getSpawnSlots(team);
         if (spawns.isEmpty()) {
-            player.sendMessage(Component.text("  Keine Spawns gespeichert.", NamedTextColor.DARK_GRAY));
+            player.sendMessage(Component.text("  Keine Spawns gespeichert.", NamedTextColor.GRAY));
         } else {
             for (int i = 0; i < Math.max(spawns.size(), 4); i++) {
                 StoredLocation location = i < spawns.size() ? spawns.get(i) : null;
@@ -274,7 +294,7 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
 
         List<StoredLocation> beacons = arena.getBeaconSlots(team);
         if (beacons.isEmpty()) {
-            player.sendMessage(Component.text("  Keine Beacons gespeichert.", NamedTextColor.DARK_GRAY));
+            player.sendMessage(Component.text("  Keine Beacons gespeichert.", NamedTextColor.GRAY));
         } else {
             for (int i = 0; i < Math.max(beacons.size(), 4); i++) {
                 StoredLocation location = i < beacons.size() ? beacons.get(i) : null;
@@ -284,9 +304,11 @@ public class TNTWarsCommand implements CommandExecutor, TabCompleter {
     }
 
     private Component describeSlot(String label, int index, StoredLocation location) {
-        Component prefix = Component.text("  " + label + " " + (index + 1) + ": ", NamedTextColor.WHITE);
+        Component prefix = Component.text("  " + label + " ", NamedTextColor.YELLOW)
+                .append(Component.text((index + 1), NamedTextColor.WHITE).decorate(TextDecoration.BOLD))
+                .append(Component.text(": ", NamedTextColor.YELLOW));
         if (location == null) {
-            return prefix.append(Component.text("-", NamedTextColor.DARK_GRAY));
+            return prefix.append(Component.text("-", NamedTextColor.GRAY));
         }
         boolean loaded = Bukkit.getWorld(location.getWorldName()) != null;
         Component info = Component.text(location.toDisplayString(), NamedTextColor.GRAY);

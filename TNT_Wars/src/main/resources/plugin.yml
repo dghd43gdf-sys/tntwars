@@ -6,7 +6,14 @@ api-version: '1.21'
 commands:
   tntwars:
     description: TNT Wars Verwaltungsbefehl
-    usage: /<command>
+    usage: |
+      /<command> add <welt> - Registriert eine neue Arena
+      /<command> info [welt] [team] - Zeigt Arena-Informationen
+      /<command> setspawn <rot|blau> [1-4] - Setzt einen Team-Spawn
+      /<command> setbeacon <rot|blau> [1-4] - Setzt einen Team-Beacon
+      /<command> wall <x1,y1,z1> <x2,y2,z2> - Definiert eine Schutzwand
+      /<command> setteam <spieler> <rot|blau> - Verschiebt Spieler ins Team
+      /<command> <welt> - Teleportiert zur Arena
     aliases: [tntw]
     permission: tntwars.admin
   start:
@@ -17,6 +24,11 @@ permissions:
   tntwars.admin:
     description: Erlaubt Verwaltung von TNT Wars Arenen
     default: op
+    children:
+      tntwars.setteam: true
   tntwars.start:
     description: Erlaubt das Starten von TNT Wars Runden
+    default: op
+  tntwars.setteam:
+    description: Erlaubt das Verschieben von Spielern zwischen Teams
     default: op
